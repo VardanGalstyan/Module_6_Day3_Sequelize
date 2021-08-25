@@ -1,9 +1,22 @@
 import Product from '../../../db/models/product/index.js'
+import s from 'sequelize'
+const { Op } = s
 
 
 export const list = async (req, res, next) => {
     try {
-        const products = await Product.findAll()
+        const { name } = req.query
+        const filter = req.query.name
+            ? {
+                where: {
+                    name: {
+                        [Op.iLike]: `%${name}%`,
+                    }
+                },
+            } : {}
+        const products = await Product.findAll({
+            ... filter
+        })
         res.send(products)
     } catch (error) {
         console.log(error);
@@ -34,7 +47,11 @@ export const update = async (req, res, next) => {
             where: { id: req.params.id },
             returning: true
         })
-        res.send(products([1][0]))
+        if (products) {
+            res.send(products[1][0])
+        } else {
+            console.log(error);
+        }
     } catch (error) {
         console.log(error);
     }
@@ -45,7 +62,7 @@ export const deleteProduct = async (req, res, next) => {
         const products = await Product.destroy({
             where: { id: req.params.id },
         })
-        res.send(products([1][0]))
+        res.send('Deleted')
     } catch (error) {
         console.log(error);
     }

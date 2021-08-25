@@ -1,8 +1,24 @@
 import Category from '../../../db/models/category/index.js'
+import Product from '../../models/product/index.js';
+import s from 'sequelize';
+const { Op } = s
 
 export const list = async (req, res, next) => {
     try {
-        const categories = await Category.findAll()
+        const { name } = req.query
+        const filter = req.query.name
+            ? {
+                where: {
+                    name: {
+                        [Op.iLike]: `%${name}%`,
+                    }
+                },
+            } : {}
+
+        const categories = await Category.findAll({
+            ...filter,
+            include: Product,
+        })
         res.send(categories)
     } catch (error) {
         console.log(error);
@@ -13,7 +29,11 @@ export const single = async (req, res, next) => {
     try {
 
         const categories = await Category.findByPk(req.params.id)
-        res.send(categories)
+        if (categories) {
+            res.send(categories)
+        } else {
+            res.status(404).send('There is no selected data!')
+        }
     } catch (error) {
         console.log(error);
     }
@@ -32,10 +52,14 @@ export const create = async (req, res, next) => {
 export const update = async (req, res, next) => {
     try {
         const categories = await Category.update(req.body, {
-            where: {id: req.params.id},
+            where: { id: req.params.id },
             returning: true
         })
-        res.send(categories([1][0]))
+        if (categories) {
+            res.send(categories[1][0])
+        } else {
+            console.log(error);
+        }
     } catch (error) {
         console.log(error);
     }
@@ -43,10 +67,14 @@ export const update = async (req, res, next) => {
 
 export const deleteCategory = async (req, res, next) => {
     try {
-        const categories = await Product.destroy({
-            where: {id: req.params.id},
+        const categories = await Category.destroy({
+            where: { id: req.params.id },
         })
-        res.send(categories([1][0]))
+        if (rows > 0) {
+            res.send("ok");
+        } else {
+            res.status(404).send("not found");
+        }
     } catch (error) {
         console.log(error);
     }

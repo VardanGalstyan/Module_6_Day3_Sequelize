@@ -12,7 +12,7 @@ server.use(services)
 const PORT = process.env.PORT
 
 
-db.sequelize.sync({force : true})
+db.sequelize.sync({alter : true})
     .then(() => {
         
         server.listen(PORT,     () => console.log(`Server is up and running on PORT: ${PORT}`))
