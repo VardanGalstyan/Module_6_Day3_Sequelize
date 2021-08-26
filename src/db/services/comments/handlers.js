@@ -1,7 +1,7 @@
-import Category from '../../../db/models/category/index.js'
-import Product from '../../models/product/index.js';
-import s from 'sequelize';
+import Comment from '../../../db/models/comments/index.js'
+import s from 'sequelize'
 const { Op } = s
+
 
 export const list = async (req, res, next) => {
     try {
@@ -14,11 +14,10 @@ export const list = async (req, res, next) => {
                     }
                 },
             } : {}
-
-        const categories = await Category.findAll({
-            ...filter,
+        const comments = await Comment.findAll({
+            ... filter
         })
-        res.send(categories)
+        res.send(comments)
     } catch (error) {
         console.log(error);
     }
@@ -26,13 +25,8 @@ export const list = async (req, res, next) => {
 
 export const single = async (req, res, next) => {
     try {
-
-        const categories = await Category.findByPk(req.params.id)
-        if (categories) {
-            res.send(categories)
-        } else {
-            res.status(404).send('There is no selected data!')
-        }
+        const comments = await Comment.findByPk(req.params.id)
+        res.send(comments)
     } catch (error) {
         console.log(error);
     }
@@ -40,9 +34,8 @@ export const single = async (req, res, next) => {
 
 export const create = async (req, res, next) => {
     try {
-        console.log(req.body);
-        const categories = await Category.create(req.body)
-        res.send(categories)
+        const comments = await Comment.create(req.body)
+        res.send(comments)
     } catch (error) {
         console.log(error);
     }
@@ -50,12 +43,12 @@ export const create = async (req, res, next) => {
 
 export const update = async (req, res, next) => {
     try {
-        const categories = await Category.update(req.body, {
+        const comments = await Comment.update(req.body, {
             where: { id: req.params.id },
             returning: true
         })
-        if (categories) {
-            res.send(categories[1][0])
+        if (comments) {
+            res.send(comments[1][0])
         } else {
             console.log(error);
         }
@@ -64,16 +57,12 @@ export const update = async (req, res, next) => {
     }
 }
 
-export const deleteCategory = async (req, res, next) => {
+export const deleteComment = async (req, res, next) => {
     try {
-        const categories = await Category.destroy({
+        const comments = await Comment.destroy({
             where: { id: req.params.id },
         })
-        if (rows > 0) {
-            res.send("ok");
-        } else {
-            res.status(404).send("not found");
-        }
+        res.send('Deleted')
     } catch (error) {
         console.log(error);
     }

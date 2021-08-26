@@ -1,8 +1,6 @@
-import Product from '../../../db/models/product/index.js'
-import Comment from '../../models/comments/index.js'
-import User from '../../models/user/index.js'
+import User from '../../../db/models/user/index.js'
 import Category from '../../models/category/index.js'
-
+import Comment from '../../models/comments/index.js'
 import s from 'sequelize'
 const { Op } = s
 
@@ -18,14 +16,18 @@ export const list = async (req, res, next) => {
                     }
                 },
             } : {}
-        const products = await Product.findAll({
+        const users = await User.findAll({
             ... filter,
-            include: [{model: Category}, {model:Comment, include:User} ]
-            // include: Comment,
-            // include: User,
-
+            include: {
+                as: "category",
+                model: Category,
+                where: req.query.category
+                  ? { name: { [Op.iLike]: `%${req.query.category}%` } }
+                  : {},
+              },
+            include: Comment
         })
-        res.send(products)
+        res.send(users)
     } catch (error) {
         console.log(error);
     }
@@ -33,8 +35,8 @@ export const list = async (req, res, next) => {
 
 export const single = async (req, res, next) => {
     try {
-        const products = await Product.findByPk(req.params.id)
-        res.send(products)
+        const users = await User.findByPk(req.params.id)
+        res.send(users)
     } catch (error) {
         console.log(error);
     }
@@ -42,8 +44,8 @@ export const single = async (req, res, next) => {
 
 export const create = async (req, res, next) => {
     try {
-        const products = await Product.create(req.body)
-        res.send(products)
+        const users = await User.create(req.body)
+        res.send(users)
     } catch (error) {
         console.log(error);
     }
@@ -51,23 +53,23 @@ export const create = async (req, res, next) => {
 
 export const update = async (req, res, next) => {
     try {
-        const products = await Product.update(req.body, {
+        const users = await User.update(req.body, {
             where: { id: req.params.id },
             returning: true
         })
-        if (products) {
-            res.send(products[1][0])
+        if (users) {
+            res.send(users[1][0])
         } else {
-            console.log(error);
+            console.log("This error is thrown", error);
         }
     } catch (error) {
         console.log(error);
     }
 }
 
-export const deleteProduct = async (req, res, next) => {
+export const deleteUser = async (req, res, next) => {
     try {
-        const products = await Product.destroy({
+        const users = await User.destroy({
             where: { id: req.params.id },
         })
         res.send('Deleted')
