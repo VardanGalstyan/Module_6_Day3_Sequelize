@@ -7,9 +7,9 @@ const sequelize = new Sequelize(PGDATABASE, PGUSERNAME, PGPASSWORD, {
     port: PGPORT,
     dialect: "postgres",
     dialectOptions: {
-        ssl:{
-            require:true,
-            rejectUnauthorized: false 
+        ssl: {
+            require: true,
+            rejectUnauthorized: false,
         }
     }
 });
@@ -18,7 +18,7 @@ const testConnection = async () => {
     try {
         await sequelize.authenticate();
         await sequelize.sync({
-            alter:true
+
         })
         console.log("Connection has been established Successfully");
     } catch (error) {
