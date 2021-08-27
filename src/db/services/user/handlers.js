@@ -1,31 +1,13 @@
-import User from '../../../db/models/user/index.js'
-import Category from '../../models/category/index.js'
-import Comment from '../../models/comments/index.js'
+import models from '../../models/index.js'
+const {Comment, User, Product} = models
 import s from 'sequelize'
 const { Op } = s
 
 
 export const list = async (req, res, next) => {
     try {
-        const { name } = req.query
-        const filter = req.query.name
-            ? {
-                where: {
-                    name: {
-                        [Op.iLike]: `%${name}%`,
-                    }
-                },
-            } : {}
         const users = await User.findAll({
-            ... filter,
-            include: {
-                as: "category",
-                model: Category,
-                where: req.query.category
-                  ? { name: { [Op.iLike]: `%${req.query.category}%` } }
-                  : {},
-              },
-            include: Comment
+            include: {model: Comment, include : Product}
         })
         res.send(users)
     } catch (error) {

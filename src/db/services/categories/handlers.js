@@ -1,5 +1,5 @@
-import Category from '../../../db/models/category/index.js'
-import Product from '../../models/product/index.js';
+import models from '../../models/index.js'
+const {Comment, User, Product, Category} = models
 import s from 'sequelize';
 const { Op } = s
 
@@ -17,6 +17,7 @@ export const list = async (req, res, next) => {
 
         const categories = await Category.findAll({
             ...filter,
+            include: [{model: Product, as: "products"}]
         })
         res.send(categories)
     } catch (error) {

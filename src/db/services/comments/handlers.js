@@ -1,4 +1,5 @@
-import Comment from '../../../db/models/comments/index.js'
+import models from '../../models/index.js'
+const {Comment, User, Product, Category} = models
 import s from 'sequelize'
 const { Op } = s
 
@@ -15,7 +16,8 @@ export const list = async (req, res, next) => {
                 },
             } : {}
         const comments = await Comment.findAll({
-            ... filter
+            ... filter,
+            include: [{model: Product}, {model: User}]
         })
         res.send(comments)
     } catch (error) {

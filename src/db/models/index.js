@@ -1,37 +1,23 @@
 import Product from "./product/index.js";
 import Category from "./category/index.js";
-import sequelize from '../index.js'
 import User from './user/index.js'
 import Comment from './comments/index.js'
-import userProducts from './userProducts.js'
 
-// Category.hasMany(Product, { foreignKey: "category_id", as: "products" });
-// Product.belongsTo(Category, { foreignKey: "category_id", as: "category" });
-
-Product.belongsToMany(User, { through: { model: userProducts, unique: false } });
-User.belongsToMany(Product, { through: { model: userProducts, unique: false } });
 
 User.hasMany(Comment);
 Comment.belongsTo(User);
 
+Product.hasMany(Comment)
+Comment.belongsTo(Product)
+
 
 //check if there foreign keys(productId, categoryId)
-// if it wasn't it will  create foreign keys in categoryProducts tabel
+// if it wasn't it will  create foreign keys in categoryProducts table
 //Product.findAll({include:Category})
-Product.belongsToMany(Category, {through:"productCategory"})
-
-Category.belongsToMany(Product, {through:"productCategory"})
-
+Product.belongsToMany(Category, {through:"productCategories", as: "categories"})
+Category.belongsToMany(Product, {through:"productCategories", as: "products"})
 
 
 
-// User.hasMany(userProducts);
-// userProducts.belongsTo(User);
 
-// Product.hasMany(userProducts);
-// userProducts.belongsTo(Product);
-
-// Comment.hasMany(userProducts);
-// userProducts.belongsTo(Comment);
-
-export default {Product, sequelize, Category, Comment, User }
+export default {Product, Category, Comment, User }

@@ -1,7 +1,5 @@
-import Product from '../../../db/models/product/index.js'
-import Comment from '../../models/comments/index.js'
-import User from '../../models/user/index.js'
-import Category from '../../models/category/index.js'
+import models from '../../models/index.js'
+const {Comment, User, Product, Category} = models
 
 import s from 'sequelize'
 const { Op } = s
@@ -20,8 +18,8 @@ export const list = async (req, res, next) => {
             } : {}
         const products = await Product.findAll({
             ... filter,
-            include: [{model: Category}, {model:Comment, include:User} ]
-            // include: Comment,
+            // include: {model: Category, as: "categories"},
+            include: [{model: Comment, include : User},{model: Category, as:"categories"}]
             // include: User,
 
         })
