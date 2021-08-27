@@ -5,7 +5,13 @@ const { PGDATABASE, PGUSERNAME, PGPASSWORD, PGHOST, PGPORT } = process.env;
 const sequelize = new Sequelize(PGDATABASE, PGUSERNAME, PGPASSWORD, {
     host: PGHOST,
     port: PGPORT,
-    dialect: "postgres"
+    dialect: "postgres",
+    dialectOptions: {
+        ssl:{
+            require:true,
+            rejectUnauthorized: false 
+        }
+    }
 });
 
 const testConnection = async () => {
@@ -23,3 +29,4 @@ const testConnection = async () => {
 testConnection();
 
 export default sequelize;
+
