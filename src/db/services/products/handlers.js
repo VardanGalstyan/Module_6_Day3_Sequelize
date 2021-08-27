@@ -1,5 +1,5 @@
 import models from '../../models/index.js'
-const {Comment, User, Product, Category} = models
+const { Comment, User, Product, Category } = models
 
 import s from 'sequelize'
 const { Op } = s
@@ -7,18 +7,15 @@ const { Op } = s
 
 export const list = async (req, res, next) => {
     try {
-        const { name } = req.query
-        const filter = req.query.name
-            ? {
-                where: {
-                    name: {
-                        [Op.iLike]: `%${name}%`,
-                    }
-                },
-            } : {}
+        const {name, category} = req.query
         const products = await Product.findAll({
-            ... filter,
-            include: {model: Comment, include : User}
+            where: name
+                ? { name: { [Op.iLike]: `%${name}%` } }
+                : {},
+            include: {
+                model: Category,
+                where: category ? { name: category } : {},
+            },
         })
         res.send(products)
     } catch (error) {

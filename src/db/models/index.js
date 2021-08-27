@@ -4,6 +4,14 @@ import User from './user/index.js'
 import Comment from './comments/index.js'
 import Cart from './cart/index.js'
 
+Category.hasMany(Product, {
+    onDelete: "cascade",
+    foreignKey: { allowNull: false },
+});
+Product.belongsTo(Category, {
+    onDelete: "cascade",
+    foreignKey: { allowNull: false },
+});
 
 User.hasMany(Comment);
 Comment.belongsTo(User);

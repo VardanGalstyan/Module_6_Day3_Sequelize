@@ -1,12 +1,13 @@
 import models from '../../models/index.js'
-const { Comment, User, Cart, Product } = models
-import s from 'sequelize';
-const { Op } = s
+const { User, Cart, Product } = models
+
+
 
 export const list = async (req, res, next) => {
     try {
         const data = await Cart.findAll({
             where: { userId: req.params.userId },
+            include: [{model: User}, {model:Product}]
         });
         res.send(data)
     } catch (error) {
