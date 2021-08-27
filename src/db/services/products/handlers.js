@@ -18,10 +18,7 @@ export const list = async (req, res, next) => {
             } : {}
         const products = await Product.findAll({
             ... filter,
-            // include: {model: Category, as: "categories"},
-            include: [{model: Comment, include : User},{model: Category, as:"categories"}]
-            // include: User,
-
+            include: {model: Comment, include : User}
         })
         res.send(products)
     } catch (error) {
