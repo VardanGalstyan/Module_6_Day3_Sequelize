@@ -6,12 +6,12 @@ const sequelize = new Sequelize(PGDATABASE, PGUSERNAME, PGPASSWORD, {
     host: PGHOST,
     dialect: "postgres",
     protocol: 'postgres',
-    // dialectOptions: {
-    //     ssl: {
-    //         require: true,
-    //         rejectUnauthorized: false,
-    //     }
-    // }
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false,
+        }
+    }
 });
 
 const testConnection = async () => {
