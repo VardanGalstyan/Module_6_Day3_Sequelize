@@ -1,17 +1,17 @@
-import sequelize from "../../index.js"
-import s from 'sequelize'
-const {DataTypes} = s
+import sequelize from "../../index.js";
+import s from "sequelize";
+const { DataTypes } = s;
 
-const Comment = sequelize.define("comment",{
+const Comment = sequelize.define("comment", {
     id: {
         primaryKey: true,
         type: DataTypes.INTEGER,
-        autoIncrement: true
+        autoIncrement: true,
     },
     comment: {
         type: DataTypes.STRING,
-        allowNull: false
-    }
+        allowNull: false,
+    },
 });
 
-export default Comment
+export default Comment;

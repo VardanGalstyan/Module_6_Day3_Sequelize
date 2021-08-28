@@ -40,6 +40,7 @@ export const create = async (req, res, next) => {
         res.send(comments)
     } catch (error) {
         console.log(error);
+        next(error)
     }
 }
 
